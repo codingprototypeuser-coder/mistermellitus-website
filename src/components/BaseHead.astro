@@ -69,5 +69,18 @@ const { title, description, image = FallbackImage } = Astro.props;
         });
       }
     });
+    // Automatisch Invite-Token verarbeiten
+    window.netlifyIdentity.on("init", () => {
+      const hash = window.location.hash;
+      if (hash && hash.includes("invite_token")) {
+        window.netlifyIdentity.open("signup");
+      }
+      if (hash && hash.includes("confirmation_token")) {
+        window.netlifyIdentity.open("login");
+      }
+      if (hash && hash.includes("recovery_token")) {
+        window.netlifyIdentity.open("recover");
+      }
+    });
   }
 </script>
