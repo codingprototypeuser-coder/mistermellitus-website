@@ -28,7 +28,7 @@ collections:
     label: "Seiten"
     folder: "src/content/pages"
     create: true
-    slug: "{{slug}}"
+    slug: "{{title | slug}}"
     extension: "md"
     fields:
       - { label: "Titel", name: "title", widget: "string" }
