@@ -61,6 +61,20 @@ const { title, description, image = FallbackImage } = Astro.props;
 <!-- Netlify Identity Widget (für Decap CMS) -->
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <script is:inline>
+  // Sofort Token im Hash prüfen und Modal öffnen
+  function handleIdentityToken() {
+    const hash = window.location.hash;
+    if (hash && window.netlifyIdentity) {
+      if (hash.includes("invite_token")) {
+        window.netlifyIdentity.open("signup");
+      } else if (hash.includes("confirmation_token")) {
+        window.netlifyIdentity.open("login");
+      } else if (hash.includes("recovery_token")) {
+        window.netlifyIdentity.open("recover");
+      }
+    }
+  }
+
   if (window.netlifyIdentity) {
     window.netlifyIdentity.on("init", user => {
       if (!user) {
@@ -68,19 +82,13 @@ const { title, description, image = FallbackImage } = Astro.props;
           document.location.href = "/admin/";
         });
       }
-    });
-    // Automatisch Invite-Token verarbeiten
-    window.netlifyIdentity.on("init", () => {
-      const hash = window.location.hash;
-      if (hash && hash.includes("invite_token")) {
-        window.netlifyIdentity.open("signup");
-      }
-      if (hash && hash.includes("confirmation_token")) {
-        window.netlifyIdentity.open("login");
-      }
-      if (hash && hash.includes("recovery_token")) {
-        window.netlifyIdentity.open("recover");
-      }
+      // Token verarbeiten nach init
+      handleIdentityToken();
     });
   }
+
+  // Auch beim DOM ready prüfen, falls Widget schon geladen
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(handleIdentityToken, 500);
+  });
 </script>
