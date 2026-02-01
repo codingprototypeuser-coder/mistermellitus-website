@@ -163,7 +163,8 @@ const posts = (await getCollection('blog'))
           } else if (hash.includes("confirmation_token")) {
             window.netlifyIdentity.open("login");
           } else if (hash.includes("recovery_token")) {
-            window.netlifyIdentity.open("recover");
+            // Bei recovery_token einfach open() aufrufen - Widget erkennt Token automatisch
+            window.netlifyIdentity.open();
           }
         }
       }
