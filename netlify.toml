@@ -5,12 +5,12 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Redirects für SPA-artige Navigation
+# Redirect www zu non-www
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  conditions = {Role = ["admin"]}
+  from = "https://www.mistermellitus.com/*"
+  to = "https://mistermellitus.com/:splat"
+  status = 301
+  force = true
 
 # Headers für bessere Performance und Sicherheit
 [[headers]]
