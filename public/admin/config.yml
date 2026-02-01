@@ -1,0 +1,39 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Lokale Entwicklung (auskommentieren für Produktion)
+# local_backend: true
+
+media_folder: "public/images"
+public_folder: "/images"
+
+locale: "de"
+
+collections:
+  - name: "blog"
+    label: "Blog Beiträge"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Titel", name: "title", widget: "string" }
+      - { label: "Beschreibung", name: "description", widget: "text" }
+      - { label: "Veröffentlichungsdatum", name: "pubDate", widget: "datetime", format: "YYYY-MM-DD" }
+      - { label: "Aktualisiert am", name: "updatedDate", widget: "datetime", format: "YYYY-MM-DD", required: false }
+      - { label: "Beitragsbild", name: "heroImage", widget: "image", required: false }
+      - { label: "Inhalt", name: "body", widget: "markdown" }
+
+  - name: "pages"
+    label: "Seiten"
+    files:
+      - label: "Über mich"
+        name: "ueber-mich"
+        file: "src/content/pages/ueber-mich.md"
+        fields:
+          - { label: "Titel", name: "title", widget: "string" }
+          - { label: "Inhalt", name: "body", widget: "markdown" }
+
+site_url: https://mistermellitus.com
+display_url: https://mistermellitus.com
+logo_url: /images/logo.png

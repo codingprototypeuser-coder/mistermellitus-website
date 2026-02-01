@@ -1,49 +1,155 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_DESCRIPTION, SITE_TITLE, AUTHOR } from '../consts';
+
+// Hole die neuesten 3 Blogposts
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
 ---
 
 <!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+<html lang="de">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+
+    <main>
+      <!-- Hero Section -->
+      <section class="hero-gradient text-white py-16 md:py-24">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+            <div class="flex-1 text-center md:text-left">
+              <h1 class="text-3xl md:text-5xl font-bold mb-4">
+                Mister Mellitus und ich.
+              </h1>
+              <p class="text-lg md:text-xl text-white/90 mb-6 max-w-xl">
+                {AUTHOR.bio}
+              </p>
+              <p class="text-base text-white/80 mb-8 max-w-xl">
+                Was ich hier teile, kommt aus erster Hand: von einem, der selber kämpft, sucht, findet, stolpert und weitermacht. Seit einem Jahrzehnt sammele ich alles, was uns Diabetikern betrifft – und jetzt teile es hier.
+              </p>
+              <a
+                href="/blog"
+                class="inline-flex items-center gap-2 bg-white text-[var(--primary-dark)] px-6 py-3 rounded-lg font-semibold hover:bg-white/90 transition-colors"
+              >
+                Zum Blog
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+            </div>
+            <div class="flex-shrink-0">
+              <img
+                src="/images/header-bg.png"
+                alt="Mister Mellitus"
+                class="w-64 md:w-80 h-auto rounded-2xl shadow-2xl"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Intro Section -->
+      <section class="py-16 bg-[var(--bg-secondary)]">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 class="text-2xl md:text-3xl font-bold mb-6">
+            Sehen, lesen, verstehen …
+          </h2>
+          <p class="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
+            Diabetes ist mehr als nur Blutzucker messen. Es ist ein täglicher Begleiter, der unseren Alltag prägt. Hier findest du ehrliche Erfahrungen, praktische Tipps und wissenschaftliche Erkenntnisse – verständlich erklärt.
+          </p>
+        </div>
+      </section>
+
+      <!-- Latest Blog Posts -->
+      <section class="py-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between mb-10">
+            <h2 class="text-2xl md:text-3xl font-bold">Neueste Beiträge</h2>
+            <a
+              href="/blog"
+              class="text-[var(--primary)] hover:text-[var(--primary-dark)] font-medium flex items-center gap-1"
+            >
+              Alle Beiträge
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {posts.map((post) => (
+              <article class="card group">
+                {post.data.heroImage && (
+                  <img
+                    src={post.data.heroImage}
+                    alt={post.data.title}
+                    class="w-full h-48 object-cover"
+                  />
+                )}
+                <div class="p-6">
+                  <time class="text-sm text-[var(--text-muted)]">
+                    <FormattedDate date={post.data.pubDate} />
+                  </time>
+                  <h3 class="text-lg font-semibold mt-2 mb-3 group-hover:text-[var(--primary)] transition-colors">
+                    <a href={`/blog/${post.id}`}>{post.data.title}</a>
+                  </h3>
+                  <p class="text-[var(--text-secondary)] text-sm line-clamp-3">
+                    {post.data.description}
+                  </p>
+                  <a
+                    href={`/blog/${post.id}`}
+                    class="inline-flex items-center gap-1 text-[var(--primary)] text-sm font-medium mt-4 hover:text-[var(--primary-dark)]"
+                  >
+                    Weiterlesen
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Newsletter Section -->
+      <section class="py-16 bg-[var(--bg-secondary)]">
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 class="text-2xl md:text-3xl font-bold mb-4">
+            Bleibe auf dem Laufenden
+          </h2>
+          <p class="text-[var(--text-secondary)] mb-8">
+            Erhalte neue Beiträge direkt in dein Postfach – kein Spam, nur wertvolle Tipps rund um Diabetes.
+          </p>
+          <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <input
+              type="email"
+              placeholder="Deine E-Mail-Adresse"
+              required
+              class="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 outline-none transition-all"
+            />
+            <button
+              type="submit"
+              class="btn btn-primary whitespace-nowrap"
+            >
+              Anmelden
+            </button>
+          </form>
+          <p class="text-xs text-[var(--text-muted)] mt-4">
+            Mit der Anmeldung stimmst du der <a href="/datenschutz" class="underline">Datenschutzerklärung</a> zu.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </body>
 </html>
