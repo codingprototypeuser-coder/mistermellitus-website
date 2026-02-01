@@ -6,4 +6,4 @@ pageType: standard
 showInNav: true
 navOrder: 1
 ---
-kleine Test Inhalt
+kleiner Test Inhalt
