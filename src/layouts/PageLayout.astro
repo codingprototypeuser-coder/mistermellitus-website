@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+type Props = CollectionEntry<'pages'>['data'];
+
+const { title, description, heroImage, pageType = 'standard', updatedDate } = Astro.props;
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <BaseHead title={`${title} | ${SITE_TITLE}`} description={description} />
+  </head>
+  <body>
+    <Header />
+
+    <main class="py-16">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header Section -->
+        <div class="mb-12">
+          <h1 class="text-3xl md:text-4xl font-bold mb-6">{title}</h1>
+          <div class="w-20 h-1 bg-[var(--primary)] rounded"></div>
+          {updatedDate && (
+            <p class="text-sm text-[var(--text-muted)] mt-4">
+              Zuletzt aktualisiert: {updatedDate.toLocaleDateString('de-DE')}
+            </p>
+          )}
+        </div>
+
+        <!-- Hero Image (optional) -->
+        {heroImage && (
+          <div class="mb-12">
+            <Image
+              src={heroImage}
+              alt={title}
+              width={800}
+              height={400}
+              class="w-full rounded-xl shadow-lg"
+            />
+          </div>
+        )}
+
+        <!-- Content -->
+        <div class="prose max-w-none">
+          <slot />
+        </div>
+
+        <!-- Legal Pages: Quelle -->
+        {pageType === 'legal' && (
+          <p class="text-sm text-[var(--text-muted)] mt-8">
+            Quelle: <a href="https://www.e-recht24.de" target="_blank" rel="noopener noreferrer" class="underline hover:text-[var(--primary)]">eRecht24</a>
+          </p>
+        )}
+      </div>
+    </main>
+
+    <Footer />
+  </body>
+</html>

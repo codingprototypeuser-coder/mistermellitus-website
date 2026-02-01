@@ -26,13 +26,34 @@ collections:
 
   - name: "pages"
     label: "Seiten"
-    files:
-      - label: "Über mich"
-        name: "ueber-mich"
-        file: "src/content/pages/ueber-mich.md"
-        fields:
-          - { label: "Titel", name: "title", widget: "string" }
-          - { label: "Inhalt", name: "body", widget: "markdown" }
+    folder: "src/content/pages"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    fields:
+      - { label: "Titel", name: "title", widget: "string" }
+      - { label: "Beschreibung (SEO)", name: "description", widget: "text" }
+      - { label: "URL-Pfad", name: "slug", widget: "string", hint: "z.B. 'kontakt' für /kontakt" }
+      - label: "Seiten-Typ"
+        name: "pageType"
+        widget: "select"
+        options:
+          - { label: "Standard", value: "standard" }
+          - { label: "Kontakt", value: "contact" }
+          - { label: "Rechtlich (Impressum, Datenschutz)", value: "legal" }
+        default: "standard"
+      - { label: "Hero-Bild", name: "heroImage", widget: "image", required: false }
+      - label: "In Navigation anzeigen"
+        name: "showInNav"
+        widget: "boolean"
+        default: false
+      - label: "Navigations-Reihenfolge"
+        name: "navOrder"
+        widget: "number"
+        required: false
+        hint: "Kleinere Zahlen erscheinen weiter links"
+      - { label: "Zuletzt aktualisiert", name: "updatedDate", widget: "datetime", format: "YYYY-MM-DD", required: false }
+      - { label: "Inhalt", name: "body", widget: "markdown" }
 
 site_url: https://mistermellitus.com
 display_url: https://mistermellitus.com
