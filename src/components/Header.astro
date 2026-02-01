@@ -1,11 +1,22 @@
 ---
+import { getCollection } from 'astro:content';
 import { SITE_TITLE } from '../consts';
 
+// Dynamische Seiten aus CMS laden
+const pages = await getCollection('pages');
+const dynamicNavItems = pages
+  .filter((page) => page.data.showInNav)
+  .sort((a, b) => (a.data.navOrder || 99) - (b.data.navOrder || 99))
+  .map((page) => ({
+    href: `/${page.data.slug || page.id}`,
+    label: page.data.title,
+  }));
+
+// Statische + dynamische Navigation kombinieren
 const navItems = [
   { href: '/', label: 'Home' },
   { href: '/blog', label: 'Blog' },
-  { href: '/ueber-mich', label: 'Über mich' },
-  { href: '/kontakt', label: 'Kontakt' },
+  ...dynamicNavItems,
 ];
 
 const currentPath = Astro.url.pathname;

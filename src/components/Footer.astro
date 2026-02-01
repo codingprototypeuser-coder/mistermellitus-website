@@ -1,16 +1,34 @@
 ---
+import { getCollection } from 'astro:content';
+
 const today = new Date();
+
+// Dynamische Seiten aus CMS laden
+const pages = await getCollection('pages');
+
+// Seiten für "Über"-Bereich (showInNav und nicht legal)
+const ueberLinks = pages
+  .filter((page) => page.data.showInNav && page.data.pageType !== 'legal')
+  .sort((a, b) => (a.data.navOrder || 99) - (b.data.navOrder || 99))
+  .map((page) => ({
+    href: `/${page.data.slug || page.id}`,
+    label: page.data.title,
+  }));
+
+// Rechtliche Seiten (pageType: legal)
+const rechtlicheLinks = pages
+  .filter((page) => page.data.pageType === 'legal')
+  .map((page) => ({
+    href: `/${page.data.slug || page.id}`,
+    label: page.data.title,
+  }));
 
 const footerLinks = {
   ueber: [
-    { href: '/ueber-mich', label: 'Über mich' },
+    ...ueberLinks,
     { href: '/blog', label: 'Blog' },
-    { href: '/kontakt', label: 'Kontakt' },
   ],
-  rechtliches: [
-    { href: '/impressum', label: 'Impressum' },
-    { href: '/datenschutz', label: 'Datenschutzerklärung' },
-  ],
+  rechtliches: rechtlicheLinks,
 };
 ---
 
