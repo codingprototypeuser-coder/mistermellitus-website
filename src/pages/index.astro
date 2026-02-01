@@ -151,5 +151,40 @@ const posts = (await getCollection('blog'))
     </main>
 
     <Footer />
+
+    <!-- Netlify Identity Widget für Token-Handling -->
+    <script is:inline src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script is:inline>
+      function handleIdentityToken() {
+        const hash = window.location.hash;
+        if (hash && window.netlifyIdentity) {
+          if (hash.includes("invite_token")) {
+            window.netlifyIdentity.open("signup");
+          } else if (hash.includes("confirmation_token")) {
+            window.netlifyIdentity.open("login");
+          } else if (hash.includes("recovery_token")) {
+            window.netlifyIdentity.open("recover");
+          }
+        }
+      }
+
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+          handleIdentityToken();
+        });
+      }
+
+      // Fallback: Nach kurzer Verzögerung nochmal prüfen
+      setTimeout(() => {
+        if (window.netlifyIdentity) {
+          handleIdentityToken();
+        }
+      }, 1000);
+    </script>
   </body>
 </html>
